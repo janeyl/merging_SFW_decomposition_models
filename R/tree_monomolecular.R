@@ -56,21 +56,16 @@ tree_forcing_monomolecular <- function(time, parms) {
   doy <- (time %% 365) + 1
   
   # Model temperature:
-  if(parms$force_eqm == 1){
-    Temp = parms$MAT
-    theta = parms$MAtheta
-  }else{
-    Temp_function <- function(t) {
-      parms$MAT + parms$T_amp * sin(2 * pi * (t - 110) / 365)
-    }
-    
-    theta_function <- function(t) {
-      parms$MAtheta + parms$theta_amp * cos(4 * pi * (t - 110) / 365)
-    }
-    
-    theta = theta_function(doy)
-    Temp = Temp_function(doy)
+  Temp_function <- function(t) {
+    parms$MAT + parms$T_amp * sin(2 * pi * (t - 110) / 365)
   }
+  
+  theta_function <- function(t) {
+    parms$MAtheta + parms$theta_amp * cos(4 * pi * (t - 110) / 365)
+  }
+  
+  theta = theta_function(doy)
+  Temp = Temp_function(doy)
   
   # ---- Monomolecular growth of total tree biomass ----
   B_tree <- TBTmax - (TBTmax - B0) * exp(-k_monomol * tau)
@@ -94,24 +89,18 @@ tree_forcing_monomolecular <- function(time, parms) {
   )
   
   # ---- Seasonal litterfall weighting (mean ~ 1 over year) ----
-  
-  if(parms$force_eqm == 1){
-    litterfall <- k_litterfall_ann * 1/365 * B_leaf
-  }else{
-    wrapped_pdf <- function(t, mu, sigma, Lfss = 365, K = 1) {
-      ks <- (-K):K
-      rowSums( sapply(ks, function(k) dnorm(t - mu - k*Lfss, sd = sigma)) )
-    }
-    
-    pdf_vals <- wrapped_pdf(1:365, mu = 288, sigma = 30)
-    prob_vals <- pdf_vals / sum(pdf_vals)
-    
-    # ---- Fluxes ----
-    litterfall     <- k_litterfall_ann * prob_vals[doy] * B_leaf + 
-      # Herbaceous plants are 100% lost:
-      1 * prob_vals[doy] * B_herb
-    
+  wrapped_pdf <- function(t, mu, sigma, Lfss = 365, K = 1) {
+    ks <- (-K):K
+    rowSums( sapply(ks, function(k) dnorm(t - mu - k*Lfss, sd = sigma)) )
   }
+  
+  pdf_vals <- wrapped_pdf(1:365, mu = 288, sigma = 30)
+  prob_vals <- pdf_vals / sum(pdf_vals)
+  
+  # ---- Fluxes ----
+  litterfall     <- k_litterfall_ann * prob_vals[doy] * B_leaf + 
+    # Herbaceous plants are 100% lost:
+    1 * prob_vals[doy] * B_herb
   
   leaf_mortality <- k_mort_leaf * B_leaf
   wood_mortality <- k_mort_wood * B_wood

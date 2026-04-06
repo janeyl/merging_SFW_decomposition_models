@@ -14,45 +14,26 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-millennial_v2_ode <- function(time, state, parms){
+millennial_model <- function(time, state, parms){
   
   with(c(state, parms), {
-    # Replace tree forcing with equilibrium if needed:
-    if(force_eqm){
-      # ----------------------------
-      # Tree forcing (no plant states)
-      # ----------------------------
-      tf <- tree_forcing_monomolecular(time, parms)
-      
-      tf <- tree_forcing_monomolecular(36500000, parms)
-      
-      TotalBiomassTree <- tf["B_tree"]
-      litterfall       <- tf["litterfall_f"]
-      leaf_mortality   <- tf["leaf_mort"]
-      wood_mortality   <- tf["wood_mort"]
-      root_mortality   <- tf["root_mort"]
-      exudates         <- tf["exudates_f"]
-      # ----------------------------
-      # Forcings at current time (Fi, T, theta)
-      # ----------------------------
-      T_t              <- tf["Temp"] # °C
-      theta_t          <- tf["theta"] # m^3 m^-3
-    }else{
-      # ----------------------------
-      # Tree forcing (no plant states)
-      # ----------------------------
-      TotalBiomassTree <- B_tree(time)
-      litterfall       <- litterfall_f(time)
-      leaf_mortality   <- leaf_mort(time)
-      wood_mortality   <- wood_mort(time)
-      root_mortality   <- root_mort(time)
-      exudates         <- exudates_f(time)
-      # ----------------------------
-      # Forcings at current time (Fi, T, theta)
-      # ----------------------------
-      T_t              <- Temp(time) # °C
-      theta_t          <- theta(time) # m^3 m^-3
-    }
+    # ----------------------------
+    # ---- Get vegetation + climate forcing ----
+    # ----------------------------
+    forcing <- tree_forcing(time)
+    
+    # Extract required drivers
+    TotalBiomassTree <- forcing["B_tree"]
+    litterfall       <- forcing["litterfall_f"]
+    leaf_mortality   <- forcing["leaf_mort"]
+    wood_mortality   <- forcing["wood_mort"]
+    root_mortality   <- forcing["root_mort"]
+    exudates         <- forcing["exudates_f"]
+    # ----------------------------
+    # Forcings at current time (Fi, T, theta)
+    # ----------------------------
+    T_t              <- forcing["Temp"] # °C
+    theta_t          <- forcing["theta"] # m^3 m^-3
   
     # Other optional external biological fluxes used later
     detritivory_litter  <- if (exists("detritivory_litter"))  detritivory_litter  else 0

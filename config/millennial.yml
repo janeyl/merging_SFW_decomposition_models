@@ -1,0 +1,68 @@
+# ------------------------------------------------------------
+# MILLENNIAL soil C model parameters
+# ------------------------------------------------------------
+
+# ---- Fragmentation (donor-controlled) ----
+k_frag_litter: 0.0021918     # 0.8/365
+k_frag_CWD: 0.00013699      # 0.05/365
+k_frag_organic: 0.00021918  # 0.08/365
+
+# ---- Organic horizon microbial kinetics ----
+K_ol: 10
+alpha_ol: !!float 4e10
+K_ob: 10
+alpha_ob: !!float 4e10
+
+k_MICd: 0.036
+k_l_o: 0.15
+
+# ---- Soil physical state ----
+depth: 0.20
+BD: 1300
+p_c: 0.86
+rho_p: 3250
+
+# ---- Chemistry ----
+pH: 6
+
+# ---- Moisture scalars ----
+psi_matric: -15
+lambda_mat: !!float 2.1e-4
+k_a_min: 0.20
+
+# ---- Kinetics switch ----
+kinetics: 1   # 1 = MM, 2 = ECA, 3 = LIN
+
+# ---- Arrhenius parameters ----
+Rgas: 8.31446
+alpha_pl: !!float 1.8e12
+Ea_pl: 63909
+alpha_lb: !!float 2.3e12
+Ea_lb: 57865
+
+# ---- Half-saturation constants ----
+K_pl: 6443
+K_lb: 774.6
+
+# ---- Adsorption/desorption ----
+p1: 0.12
+p2: 0.216
+K_ld: 0.001
+
+# ---- Aggregation ----
+k_pa: 0.018
+k_b: 0.02
+k_ma: 0.0048
+
+# ---- Microbial processes ----
+k_bd: 0.0045
+CUE_ref: 0.19
+CUE_T: 0.012
+T_ref: 15
+
+# ---- Leaching ----
+k_l: 0.0015
+
+# ---- Input partitioning ----
+p_a: 0.33
+p_b: 0.50
