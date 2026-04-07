@@ -74,6 +74,40 @@ out_century <- ode(
 )
 
 
+# ---- Load code ----
+source("R/tree_monomolecular.R")
+source("R/make_tree_forcing.R")
+source("R/MIMICS_model.R")
+source("R/derive_MIMICS_parms.R")
+source("R/load_config.R")
+source("R/init_MIMICS_state.R")
+
+parms <- load_config("tree_monomolecular")
+parms <- modifyList(parms, yaml::read_yaml("config/MIMICS.yml"))
+parms <- derive_MIMICS_parms(parms)
+
+#---- Calculate equilibrium ----
+parms$tree_forcing <- make_tree_forcing_equilibrium(parms)
+
+MIMICS_eqm = rootSolve::stode(
+  y     = init_MIMICS_state(),
+  func  = MIMICS_model,
+  parms = parms
+)
+
+
+# ---- Build forcing once ----
+parms$tree_forcing <- make_tree_forcing(parms)
+
+# ---- Run ----
+out_MIMICS <- ode(
+  y     = MIMICS_eqm$y,
+  times = times,
+  func  = MIMICS_model,
+  parms = parms
+)
+
+
 tibble(data.frame(out_millennial))
 
 tibble(data.frame(out_century))
