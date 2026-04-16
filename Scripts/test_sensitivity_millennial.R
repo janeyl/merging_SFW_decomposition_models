@@ -1,5 +1,13 @@
 # A script to conduct a sensitivity analysis on the models:
 
+if (!"pacman" %in% rownames(installed.packages())) {
+  install.packages("pacman", dependencies = TRUE)
+}
+
+library(pacman)
+p_load(deSolve, FME, tidyverse, yaml)
+verbose = F
+
 # Load in library:
 library(deSolve)
 library(tidyverse)
