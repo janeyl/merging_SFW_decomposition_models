@@ -39,3 +39,5 @@ millennial_eqm = rootSolve::stode(
 )
 
 millennial_eqm$y
+
+.Machine$double.eps

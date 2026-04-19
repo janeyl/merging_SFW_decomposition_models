@@ -12,7 +12,8 @@ init_millennial_state <- function(Detritivore = F) {
       A       = 1000,
       M       = 3000,
       B       = 40,
-      Detritivore = 10
+      Detritivore = 10,
+      Predator = 2
     )
   }else{
     c(

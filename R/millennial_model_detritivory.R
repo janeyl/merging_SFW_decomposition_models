@@ -185,7 +185,7 @@ millennial_model_detritivory <- function(time, state, parms){
       root_to_organic * root_mortality +
       faeces_to_organic * faeces +
       carcass_to_organic * carcass -
-      F_Organic_DOM - fragmentation_organic - Fed_om_det + faeces_det
+      F_Organic_DOM - fragmentation_organic - Fed_om_det + faeces_det + d_detritivores*Detritivore^2 + d_predator*Predator^2 + (1-a_predator)*c_predator*Predator*Detritivore
     
     dDOM <- F_Litter_DOM + F_CWD_DOM + F_Organic_DOM + F_MIC_mortality - F_DOM_MIC - F_l_organic
     
@@ -210,7 +210,7 @@ millennial_model_detritivory <- function(time, state, parms){
     # -------------------------
     
     # Eq. 1
-    dP <- p_i * Fi_t + p_a * F_a - F_pa - F_pl
+    dP <- p_i * Fi_t + p_a * F_a - F_pa - F_pl 
     
     # Eq. 7
     dL <- Fi_t * (1 - p_i) - F_l + F_pl - F_lm - F_lb + (1 - p_b) * F_bm + F_ld
@@ -224,13 +224,15 @@ millennial_model_detritivory <- function(time, state, parms){
     # Eq. 20
     dB <- F_lb - F_bm - F_mr
     
-    dDetritivore <- p_detritivores*a_detritivores*(Fed_mic_det + Fed_om_det + Fed_lit_det) - d_detritivores*Detritivore - E_detritivores*Detritivore
+    dDetritivore <- p_detritivores*a_detritivores*(Fed_mic_det + Fed_om_det + Fed_lit_det) - (d_detritivores*Detritivore^2) - E_detritivores*Detritivore - Predator*c_predator*Detritivore
+    
+    dPredators <- p_predator*a_predator*c_predator*Detritivore*Predator - d_predator*Predator^2 - E_predator*Predator
     
     # ---------------------------
     # Return list for deSolve
     # ---------------------------
     list(
-      c(dLitter, dCWD, dOrganic, dDOM, dMIC, dP, dL, dA, dM, dB, dDetritivore)
+      c(dLitter, dCWD, dOrganic, dDOM, dMIC, dP, dL, dA, dM, dB, dDetritivore, dPredators)
     )
   })
 }
