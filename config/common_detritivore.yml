@@ -3,13 +3,13 @@
 # ------------------------------------------------------------
 
 # Climate forcing
-MAT: 15
-T_amp: 12
+MAT: 12
+T_amp: 20
 MAtheta: 0.30
 theta_amp: 0.15
 
 # Texture / site
-pct_claysilt: 70
+pct_claysilt: 70    # millenial model 
 fCLAY: 40           # clay fraction (0–1) (MIMICS)
 
 # Lignin fraction

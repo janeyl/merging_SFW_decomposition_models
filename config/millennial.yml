@@ -22,7 +22,7 @@ k_l_o: 0.15
 
 # ---- Soil physical state ----
 depth: 0.20
-BD: 1300
+BD: 1300        #kg per m^3
 p_c: 0.86
 rho_p: 3250
 
